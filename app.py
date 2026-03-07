@@ -47,10 +47,10 @@ if uploaded_file is not None:
     result_idx = np.argmax(predictions[0])
     result = class_names[result_idx]
     
-    # Confidence Calculation using Softmax
+    # Confidence calculation using Softmax for better reliability
     score = tf.nn.softmax(predictions[0])
     confidence = 100 * np.max(score)
-
+    
     # 6. Result Display
     st.success(f"### Result: {result}")
     st.info(f"**Confidence Level:** {confidence:.2f}%")
