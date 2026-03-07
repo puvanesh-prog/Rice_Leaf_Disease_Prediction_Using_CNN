@@ -31,16 +31,13 @@ if uploaded_file is not None:
     # 4. Preprocessing
     img = image_display.resize((224, 224))
     img_array = np.array(img)
+    img_array = np.expand_dims(img_array, axis=0) # Batch dimension
     
-    # Batch dimension add panrom (1, 224, 224, 3)
-    img_array = np.expand_dims(img_array, axis=0) 
-    
-    # Normalization
-    img_array = img_array.astype('float32') / 255.0
+    # Standard MobileNetV2 preprocessing (Idhai use pannunga)
+    img_array = tf.keras.applications.mobilenet_v2.preprocess_input(img_array)
 
     # 5. Prediction
     predictions = model.predict(img_array)
-    
     # Result Processing
     result_idx = np.argmax(predictions[0])
     result = class_names[result_idx]
