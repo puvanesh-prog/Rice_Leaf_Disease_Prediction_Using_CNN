@@ -9,7 +9,7 @@ st.set_page_config(page_title="Rice Doctor AI", layout="centered")
 # 1. Load the Model (Unga .h5 file name inga correct-ah kudunga)
 @st.cache_resource
 def load_my_model():
-    model = tf.keras.models.load_model('rice_leaf_disease_final.keras')
+    model = tf.keras.models.load_model('rice_leaf_disease_final.h5', compile=False)
     return model
 
 model = load_my_model()
