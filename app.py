@@ -6,7 +6,6 @@ import numpy as np
 # 1. Model Load
 @st.cache_resource
 def load_my_model():
-    # Make sure the filename matches your GitHub file exactly
     return tf.keras.models.load_model('rice_leaf_disease_final.keras', compile=False)
 
 model = load_my_model()
@@ -20,29 +19,35 @@ remedies = {
 }
 
 st.title("🌿 Rice Doctor AI")
-uploaded_file = st.file_uploader("Choose a rice leaf image...", type=["jpg", "jpeg", "png"])
+
+uploaded_file = st.file_uploader(
+    "Choose a rice leaf image...", 
+    type=["jpg", "jpeg", "png", "jfif", "webp", "bmp", "tiff"]
+)
 
 if uploaded_file is not None:
-    # 3. Image Display
-    image_display = Image.open(uploaded_file).convert('RGB') # Convert to RGB is MUST
+    
+    image_display = Image.open(uploaded_file).convert('RGB') 
     st.image(image_display, caption='Uploaded Leaf Image', use_container_width=True)
-    st.write("🔄 Diagnosing...")
+    
+
 
     # 4. Preprocessing
     img = image_display.resize((224, 224))
     img_array = np.array(img)
     img_array = np.expand_dims(img_array, axis=0) # Batch dimension
     
-    # Standard MobileNetV2 preprocessing (Idhai use pannunga)
+    # Standard MobileNetV2 preprocessing for better accuracy
     img_array = tf.keras.applications.mobilenet_v2.preprocess_input(img_array)
 
     # 5. Prediction
     predictions = model.predict(img_array)
+    
     # Result Processing
     result_idx = np.argmax(predictions[0])
     result = class_names[result_idx]
     
-    # Confidence Calculation
+    # Confidence Calculation using Softmax
     score = tf.nn.softmax(predictions[0])
     confidence = 100 * np.max(score)
 
