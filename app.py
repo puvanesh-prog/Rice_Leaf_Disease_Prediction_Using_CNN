@@ -6,7 +6,7 @@ import numpy as np
 # Page Configuration
 st.set_page_config(page_title="Rice Doctor AI", layout="centered")
 
-# 1. Load the Model (Unga .h5 file name inga correct-ah kudunga)
+# 1. Load the Model
 @st.cache_resource
 def load_my_model():
     model = tf.keras.models.load_model('rice_leaf_disease_final.keras', compile=False)
@@ -14,7 +14,7 @@ def load_my_model():
 
 model = load_my_model()
 
-# 2. Disease Labels & Solutions (Intha order-ah notebook classes-ku mathi check pannunga)
+# 2. Disease Labels & Solutions
 class_names = ['Bacterial leaf blight', 'Brown spot', 'Leaf smut']
 
 remedies = {
@@ -36,10 +36,13 @@ if uploaded_file is not None:
     
     st.write("🔄 Diagnosing...")
 
-    # 4. Preprocessing (Notebook-la panna adhe steps)
-    img = image.resize((224, 224))
-    img_array = np.array(img) / 255.0  # Normalization
-    img_array = np.expand_dims(img_array, axis=0)
+# 4. Preprocessing
+        img = image.resize((224, 224))
+        img_array = np.array(img) / 255.0  # Normalization
+        img_array = np.expand_dims(img_array, axis=0) 
+
+        # 5. Prediction
+        predictions = model.predict(img_array)
 
     # 5. Prediction
     predictions = model.predict(img_array)
